@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamScape AI - Transform Your Dreams into Visual Stories</title>
+    <!-- Tailwind CSS CDN with custom config -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    animation: {
+                        'gradient': 'gradient 8s linear infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        gradient: {
+                            '0%': { 'background-position': '0% 0%', 'filter': 'hue-rotate(0deg)' },
+                            '33%': { 'background-position': '100% 100%', 'filter': 'hue-rotate(10deg)' },
+                            '66%': { 'background-position': '0% 100%', 'filter': 'hue-rotate(-10deg)' },
+                            '100%': { 'background-position': '0% 0%', 'filter': 'hue-rotate(0deg)' }
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Animate.css for smooth animations -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        
+        /* Dark theme styles */
+        body {
+            background-color: #0f172a; /* Dark blue-gray background */
+            color: #e2e8f0; /* Light gray text for better readability */
+        }
+        
+        /* Enhanced gradient background with subtle animation */
+        /* Background gradient */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: radial-gradient(
+                circle at 20% 30%,
+                #0f172a 0%,  /* Dark blue */
+                #0c0f1d 100%  /* Darkest blue */
+            );
+        }
+        
+        /* Animated gradient overlay */
+        body::after {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            z-index: -1;
+            background: radial-gradient(
+                circle at center,
+                rgba(124, 58, 237, 0.15) 0%,  /* Purple */
+                rgba(99, 102, 241, 0.1) 30%,  /* Indigo */
+                rgba(79, 70, 229, 0.05) 60%,  /* Blue */
+                transparent 80%
+            );
+            animation: rotate 30s linear infinite;
+            opacity: 0.8;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Floating particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        
+        .particle {
+            position: absolute;
+            background: linear-gradient(135deg, #a78bfa, #c4b5fd);
+            border-radius: 50%;
+            opacity: 0;
+            filter: blur(4px);
+            animation: float-up 12s infinite ease-in;
+        }
+        
+        @keyframes float-up {
+            0% {
+                transform: translateY(100vh) scale(0);
+                opacity: 0;
+            }
+            20% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(-100px) scale(1);
+                opacity: 0;
+            }
+        }
+        
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(15, 23, 42, 0.9) !important;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+            color: #e2e8f0;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+            border-color: rgba(99, 102, 241, 0.4);
+            background: rgba(30, 41, 59, 0.9);
+        }
+        
+        .dream-input {
+            transition: all 0.3s ease;
+            min-height: 200px;
+            background-color: rgba(15, 23, 42, 0.7);
+            border-color: #334155;
+            color: #e2e8f0;
+        }
+        
+        .dream-input:focus {
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.3);
+            background-color: rgba(15, 23, 42, 0.9);
+        }
+        
+        .dream-input::placeholder {
+            color: #64748b;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%);
+            transition: all 0.3s ease;
+            color: white;
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.4);
+            background: linear-gradient(135deg, #6d28d9 0%, #4338ca 100%);
+        }
+        
+        .btn-primary:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+        }
+        
+        .scene-card {
+            transition: all 0.3s ease;
+            background: rgba(30, 41, 59, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(99, 102, 241, 0.1);
+            color: #e2e8f0;
+        }
+        
+        .scene-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            border-color: rgba(99, 102, 241, 0.3);
+            background: rgba(30, 41, 59, 1);
+        }
+    </style>
+    <script>
+        // Create floating particles
+        document.addEventListener('DOMContentLoaded', function() {
+            const particlesContainer = document.createElement('div');
+            particlesContainer.className = 'particles';
+            document.body.appendChild(particlesContainer);
+            
+            function createParticle() {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                // Random size between 1px and 3px
+                const size = Math.random() * 2 + 1;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // Random position
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = '100%';
+                
+                // Random animation duration between 10s and 25s
+                const duration = Math.random() * 15 + 10;
+                particle.style.animationDuration = `${duration}s`;
+                
+                // Random delay up to 5s
+                particle.style.animationDelay = `${Math.random() * 5}s`;
+                
+                // Random opacity
+                particle.style.opacity = Math.random() * 0.7 + 0.3;
+                
+                particlesContainer.appendChild(particle);
+                
+                // Remove particle after animation completes
+                setTimeout(() => {
+                    particle.remove();
+                }, duration * 1000);
+            }
+            
+            // Create initial particles
+            for (let i = 0; i < 30; i++) {
+                createParticle();
+            }
+            
+            // Create new particles at intervals
+            setInterval(createParticle, 1000);
+        });
+    </script>
+</head>
+<body class="min-h-screen p-4 md:p-8 bg-gradient-to-br from-slate-900 to-slate-800 text-slate-100">
+    <div class="container mx-auto max-w-4xl">
+        <div class="animate__animated animate__fadeInUp bg-white/5 backdrop-blur-lg rounded-3xl shadow-2xl overflow-hidden border border-white/10">
+            <div class="p-8 md:p-12">
+                <div class="text-center mb-12">
+                    <h1 class="text-5xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-indigo-400 to-pink-400 mb-6 tracking-tight">
+                        DreamScape AI
+                    </h1>
+                    <p class="text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed">
+                        Transform your dreams into stunning visual stories with AI-powered scene generation
+                    </p>
+                </div>
+
+                <!-- Dream input section -->
+                <div class="mb-10">
+                    <div class="flex justify-between items-center mb-3">
+                        <label for="dreamInput" class="block text-sm font-medium text-slate-300/90">Describe your dream</label>
+                        <span id="charCount" class="text-sm text-slate-400/80">0/2000</span>
+                    </div>
+                    <div class="relative">
+                        <div class="absolute inset-0.5 bg-gradient-to-r from-purple-500/20 to-indigo-500/20 rounded-xl -z-10 blur-sm"></div>
+                        <textarea 
+                            id="dreamInput" 
+                            class="w-full p-6 bg-slate-900/50 border border-slate-700/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/30 focus:border-purple-500/50 transition-all duration-300 text-slate-100 placeholder-slate-500 text-lg leading-relaxed" 
+                            rows="6" 
+                            placeholder="Last night I dreamed I was flying over a city of rainbows..."
+                            maxlength="2000"
+                        ></textarea>
+                        <div class="absolute -bottom-8 right-0">
+                            <span class="text-xs text-slate-400/80 bg-slate-800/80 px-2 py-1 rounded-full">
+                                <i class="fas fa-sparkles text-amber-300 mr-1"></i> Be as detailed as possible
+                            </span>
+                        </div>
+                    </div>
+                    <div class="mt-8 text-center">
+                        <button id="visualizeBtn" class="relative overflow-hidden group bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white font-semibold py-4 px-10 rounded-full text-lg transition-all duration-300 transform hover:scale-[1.02] hover:shadow-xl active:scale-95">
+                            <div class="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                            <span id="btnText" class="relative z-10 flex items-center justify-center">
+                                <span class="mr-3">✨</span> Visualize My Dream
+                            </span>
+                            <span id="btnLoading" class="hidden items-center justify-center">
+                                <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                Creating your dream...
+                            </span>
+                        </button>    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                </button>
+
+                <!-- Results section -->
+                <div id="results" class="mt-16 hidden animate__animated animate__fadeIn">
+                    <div class="text-center mb-12">
+                        <h2 class="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-300 via-indigo-300 to-pink-300 mb-4">Your Dream Scenes</h2>
+                        <div class="w-32 h-1 bg-gradient-to-r from-purple-500 via-indigo-500 to-pink-500 mx-auto rounded-full opacity-80"></div>
+                    </div>
+                    
+                    <div id="scenesContainer" class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                    </div>
+                    
+                    <div class="relative bg-slate-800/50 backdrop-blur-sm p-8 rounded-2xl mb-10 border border-slate-700/50">
+                        <div class="absolute -inset-0.5 bg-gradient-to-r from-purple-500/20 to-indigo-500/20 rounded-2xl -z-10 blur opacity-30"></div>
+                        <h3 class="text-2xl font-bold text-white mb-6 flex items-center">
+                            <svg class="w-6 h-6 mr-3 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                            </svg>
+                            Dream Montage
+                        </h3>
+                        <div id="videoContainer" class="bg-slate-900/80 rounded-xl overflow-hidden border border-slate-700/50">
+                            <video id="dreamVideo" class="w-full" poster="" controls>
+                                <source src="" type="video/mp4">
+                                <div class="flex items-center justify-center p-12 text-slate-400">
+                                    <p>Your browser does not support the video tag.</p>
+                                </div>
+                            </video>
+                        </div>
+                </div>
+                
+                <!-- Error message -->
+                <div id="errorMessage" class="mt-4 p-4 bg-red-900/30 text-red-200 border border-red-700/50 rounded-lg hidden animate__animated animate__shakeX">
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                        </svg>
+                        <span id="errorText"></span>
+                    </div>
+                </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center text-slate-400/60 text-sm mt-16 mb-8">
+        <div class="flex items-center justify-center space-x-6 mb-4">
+            <a href="#" class="text-slate-300 hover:text-white transition-colors">
+                <span class="sr-only">GitHub</span>
+                <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd" />
+                </svg>
+            </a>
+            <a href="#" class="text-slate-300 hover:text-white transition-colors">
+                <span class="sr-only">Twitter</span>
+                <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
+                </svg>
+            </a>
+        </div>
+        <p class="text-slate-400/60">Made with <span class="text-pink-400">♥</span> using AI magic</p>
+        <p class="mt-2 text-slate-500/60 text-xs">
+            <a href="#" class="hover:text-slate-300 transition-colors">Privacy Policy</a> • 
+            <a href="#" class="hover:text-slate-300 transition-colors">Terms</a> • 
+            <a href="#" class="hover:text-slate-300 transition-colors">Status</a>
+        </p>
+        <p class="mt-2 text-slate-500/50 text-xs"> 2023 DreamScape AI. All rights reserved.</p>
+    </footer>
+    
+    <!-- Font Awesome for icons -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    
+    <script>
+        // Get references to DOM elements
+        const dreamInput = document.getElementById('dreamInput');
+        const synthesizeBtn = document.getElementById('synthesizeBtn');
+        const buttonText = document.getElementById('buttonText');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const resultsDiv = document.getElementById('results');
+        const scenesContainer = document.getElementById('scenesContainer');
+        const dreamVideo = document.getElementById('dreamVideo');
+        const errorMessage = document.getElementById('errorMessage');
+        const errorText = document.getElementById('errorText');
+        const charCount = document.getElementById('charCount');
+
+        // Character counter for textarea
+        dreamInput.addEventListener('input', () => {
+            const currentLength = dreamInput.value.length;
+            charCount.textContent = `${currentLength}/2000`;
+            
+            // Change color if approaching limit
+            if (currentLength > 1800) {
+                charCount.classList.add('text-red-500');
+                charCount.classList.remove('text-gray-500');
+            } else {
+                charCount.classList.remove('text-red-500');
+                charCount.classList.add('text-gray-500');
+            }
+        });
+
+        // Add event listener to the synthesize button
+        synthesizeBtn.addEventListener('click', async () => {
+            const dreamText = dreamInput.value.trim(); // Get dream text and trim whitespace
+
+            // Input validation
+            if (!dreamText) {
+                showError('Please describe your dream first');
+                dreamInput.focus();
+                return;
+            }
+            
+            if (dreamText.length < 20) {
+                showError('Please provide a more detailed description (at least 20 characters)');
+                return;
+            }
+
+            // Reset UI state for new synthesis
+            hideError();
+            buttonText.textContent = 'Creating Your Dream...';
+            loadingSpinner.classList.remove('hidden');
+            synthesizeBtn.disabled = true;
+            resultsDiv.classList.add('hidden');
+            scenesContainer.innerHTML = '';
+            dreamVideo.src = '';
+            
+            // Add loading class to button
+            synthesizeBtn.classList.add('opacity-75', 'cursor-not-allowed');
+            
+            // Scroll to results section smoothly
+            setTimeout(() => {
+                resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+
+            try {
+                // Make a POST request to the backend's /synthesize_dream endpoint
+                const response = await fetch('/synthesize_dream', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ dream: dreamText }) // Send dream text as JSON
+                });
+
+                // Check if the response was successful (HTTP status 2xx)
+                if (!response.ok) {
+                    const errorData = await response.json(); // Parse error response from backend
+                    throw new Error(errorData.error || 'Something went wrong on the server.');
+                }
+
+                // Parse the successful JSON response from the backend
+                const data = await response.json();
+                console.log(data); // Log the full response for debugging purposes
+
+                // Display individual scenes received from the backend
+                data.scenes.forEach((scene, index) => {
+                    const sceneDiv = document.createElement('div');
+                    sceneDiv.className = `scene-card bg-white/80 backdrop-blur-sm rounded-xl shadow-md overflow-hidden transition-all duration-300 animate__animated animate__fadeInUp`;
+                    sceneDiv.style.animationDelay = `${index * 0.1}s`;
+                    
+                    sceneDiv.innerHTML = `
+                        <div class="md:flex">
+                            <div class="md:flex-shrink-0 md:w-1/3">
+                                <div class="h-full w-full overflow-hidden">
+                                    <img 
+                                        src="${scene.image_url}" 
+                                        alt="${scene.description}" 
+                                        class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-500"
+                                        loading="lazy"
+                                        onerror="this.src='https://via.placeholder.com/800x600/F3F4F6/9CA3AF?text=Image+Not+Available'"
+                                    >
+                                </div>
+                            </div>
+                            <div class="p-6 flex-1 flex flex-col justify-between">
+                                <div>
+                                    <div class="flex items-center mb-2">
+                                        <span class="px-3 py-1 text-xs font-semibold bg-purple-100 text-purple-800 rounded-full">
+                                            Scene ${index + 1}
+                                        </span>
+                                        <span class="ml-2 px-2 py-1 text-xs font-medium bg-indigo-50 text-indigo-700 rounded">
+                                            ${scene.mood}
+                                        </span>
+                                    </div>
+                                    <h3 class="text-xl font-bold text-gray-800 mb-2">${scene.description}</h3>
+                                    <blockquote class="text-gray-600 italic border-l-4 border-purple-200 pl-4 my-4">
+                                        "${scene.caption}"
+                                    </blockquote>
+                                </div>
+                                <div class="mt-4 flex flex-wrap gap-2">
+                                    ${scene.visual_tags.map(tag => 
+                                        `<span class="px-2 py-1 text-xs font-medium bg-gray-100 text-gray-600 rounded-full">
+                                            #${tag}
+                                        </span>`
+                                    ).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    scenesContainer.appendChild(sceneDiv);
+                });
+
+                // Display the generated video
+                if (data.video_url) {
+                    dreamVideo.src = data.video_url;
+                    dreamVideo.load();
+                    dreamVideo.onloadeddata = () => {
+                        // Video is ready to play
+                        dreamVideo.play().catch(e => console.log('Autoplay prevented:', e));
+                    };
+                } else {
+                    document.querySelector('.bg-gradient-to-r').innerHTML += `
+                        <div class="mt-4 p-4 bg-yellow-50 text-yellow-700 rounded-lg">
+                            <p>Video generation is still processing. Please check back later or refresh the page.</p>
+                        </div>
+                    `;
+                }
+                
+                // Show results with animation
+                resultsDiv.classList.remove('hidden');
+                resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+            } catch (error) {
+                console.error('Error:', error);
+                showError(error.message || 'Failed to process your dream. Please try again.');
+            } finally {
+                // Reset button state
+                buttonText.textContent = 'Recreate Dream';
+                loadingSpinner.classList.add('hidden');
+                synthesizeBtn.disabled = false;
+                synthesizeBtn.classList.remove('opacity-75', 'cursor-not-allowed');
+            }
+        });
+        
+        // Helper functions
+        function showError(message) {
+            errorText.textContent = message;
+            errorMessage.classList.remove('hidden');
+            errorMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        
+        function hideError() {
+            errorMessage.classList.add('hidden');
+        }
+        
+        // Initialize character count on page load
+        if (dreamInput.value) {
+            charCount.textContent = `${dreamInput.value.length}/2000`;
+        }
+    </script>
+</body>
+</html>
