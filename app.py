@@ -11,8 +11,7 @@ import io
 import asyncio
 import aiohttp
 from PIL import Image
-from moviepy import ImageClip, TextClip, CompositeVideoClip, ColorClip, concatenate_videoclips
-
+from moviepy import *
 load_dotenv()
 
 app = Flask(__name__, static_folder='static')
